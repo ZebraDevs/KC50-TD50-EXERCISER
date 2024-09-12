@@ -1,0 +1,77 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/txtOut"
+            android:scrollbars = "vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello Zebra KC50 User!"
+        />
+
+
+
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btClick_HDLauncher"
+            android:text="LAUNCH ACTIVITY ON 2ND DISPLAY" />
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="0.5"
+                android:backgroundTint="#F4140A"
+                android:onClick="onClickbtn_RED"
+                android:text="RED" />
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="0.5"
+                android:backgroundTint="#0AC314"
+                android:onClick="onClickbtn_GREEN"
+                android:text="GREEN" />
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="0.5"
+                android:backgroundTint="#0A14FF"
+                android:onClick="onClickbtn_BLUE"
+                android:text="BLUE" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
+

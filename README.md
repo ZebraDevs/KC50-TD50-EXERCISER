@@ -17,6 +17,9 @@ Sample code showing how to use some Large Screens APIs from Android and how to s
 ![image](https://github.com/user-attachments/assets/aabd9c07-15b4-4aca-97b1-3b8671196ca9)
 
 
-![video](https://github.com/NDZL/KC50-TD50-EXERCISER/blob/1df5de705c2b4ae11a14d7d27dbc1cfb409fc946/zebra-kc50-td50.mp4)
+
+https://github.com/user-attachments/assets/d40362d1-13e6-402c-a567-90040876bd8d
+
+
 
 *Please be aware that this application / sample is provided as-is for demonstration purposes without any guarantee of support*

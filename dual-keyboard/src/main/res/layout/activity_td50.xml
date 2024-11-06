@@ -35,7 +35,19 @@
 
             android:ems="20"
             android:inputType="text"
-            android:text="Just tap here to open an overlay" />
+            android:text="Just tap here to open an overlay"
+            android:textFontWeight="30" />
+
+        <EditText
+            android:id="@+id/editTextText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+
+            android:ems="20"
+            android:inputType="text"
+            android:text="Another input text field- "
+            android:textFontWeight="30" />
 
         <EditText
             android:id="@+id/editTextText"
@@ -47,7 +59,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:ems="20"
-            android:text="this is editable" />
+            android:text="this is editable- " />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -59,6 +59,9 @@ public class TD50Activity extends AppCompatActivity  {
     private WindowManager windowManagerOT;
     private View floatingKeyboardViewOT;
     EditText editText2;
+    EditText editText3;
+
+    private int lastX, lastY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,16 +80,61 @@ public class TD50Activity extends AppCompatActivity  {
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
         );
 
+        floatingKeyboardViewOT.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        lastX = (int) event.getRawX();
+                        lastY = (int) event.getRawY();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        int x = (int) event.getRawX();
+                        int y = (int) event.getRawY();
+
+// Calculate the distance moved and update the window position
+                        params.x = params.x + (x - lastX);
+                        params.y = params.y + (y - lastY);
+
+// Update the floating window position
+                        windowManagerOT.updateViewLayout(floatingKeyboardViewOT, params);
+
+// Save the new touch position
+                        lastX = x;
+                        lastY = y;
+                        break;
+                }
+                return false;
+            }
+        });
+
+
+
+
+
         editText2 = findViewById(R.id.editTextText2);
         editText2.setOnTouchListener((v, event) -> {
 //            Log.i("onCreate/setOnTouchListener","#NDZL/listener: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
 
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                windowManagerOT.addView(floatingKeyboardViewOT, params);
-                setupKeyboardButtons();
+                try {windowManagerOT.addView(floatingKeyboardViewOT, params);} catch (Exception e) {}
+                setupKeyboardButtons(editText2);
             }
 
-            setupKeyboardButtons();
+            return true;
+        });
+
+
+        editText3 = findViewById(R.id.editTextText3);
+        editText3.setOnTouchListener((v, event) -> {
+//            Log.i("onCreate/setOnTouchListener","#NDZL/listener: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                try {windowManagerOT.addView(floatingKeyboardViewOT, params);} catch (Exception e) {}
+                setupKeyboardButtons(editText3);
+            }
+
             return true;
         });
 
@@ -130,23 +178,26 @@ public class TD50Activity extends AppCompatActivity  {
         //requestPermissions(new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW}, 1);
     }
 
-    private void setupKeyboardButtons() {
+    private void setupKeyboardButtons(View etView) {
         Button keyA = floatingKeyboardViewOT.findViewById(R.id.keyA);
         Button keyB = floatingKeyboardViewOT.findViewById(R.id.keyB);
         Button keyC = floatingKeyboardViewOT.findViewById(R.id.keyC);
         Button key0 = floatingKeyboardViewOT.findViewById(R.id.key0);
         Button key1 = floatingKeyboardViewOT.findViewById(R.id.key1);
         Button keyEnter = floatingKeyboardViewOT.findViewById(R.id.keyEnter);
+        Button keyDelete = floatingKeyboardViewOT.findViewById(R.id.keyDEL);
 
 //        Log.i("FloatingKeyboardService/setupKeyboardButtons","#NDZL/body: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
 
+
+        EditText _et = (EditText) etView;
         keyA.setOnClickListener(v -> {
 //            Log.i("FloatingKeyboardService/setOnClickListener","#NDZL/listener: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
-            editText2.getText().append("A");
+            _et.getText().append("A");
         });
 
         keyB.setOnClickListener(v -> {
-            editText2.getText().append("B");
+            _et.getText().append("B");
         });
 
         keyEnter.setOnClickListener(v -> {
@@ -155,20 +206,18 @@ public class TD50Activity extends AppCompatActivity  {
             //} catch (Exception e) {}
         });
 
+        keyDelete.setOnClickListener(v -> {
+            //try {
+            _et.setText( _et.getText().delete(_et.getText().length()-1, _et.getText().length()) );
+            //} catch (Exception e) {}
+        });
+
+
 
 
         // Add more button setups for other keys
     }
 
-
-
-    /*    public void onKeyClick(View view) {
-        Button key = (Button) view;
-        EditText editText2 = findViewById(R.id.editTextText2);
-        int start = editText2.getSelectionStart();
-        int end = editText2.getSelectionEnd();
-        editText2.getText().replace(Math.min(start, end), Math.max(start, end), key.getText(), 0, key.getText().length());
-    }*/
 
     @Override
     protected void onResume() {

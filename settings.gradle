@@ -12,5 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "KC50-TD50-Sample"
-include ':app'
+rootProject.name = "KC50-TD50-EXERCISER"
+include ':multi-displays'
+include ':dual-keyboard'

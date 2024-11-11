@@ -24,4 +24,4 @@ https://github.com/user-attachments/assets/d40362d1-13e6-402c-a567-90040876bd8d
 
 *Please be aware that this application / sample is provided as-is for demonstration purposes without any guarantee of support*
 
-![image](https://cxnt48.com/author?ghKC50)
+![image](https://cxnt48.com/author)

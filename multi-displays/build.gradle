@@ -11,7 +11,7 @@ android {
     buildFeatures {
         // Enables Jetpack Compose for this module
         //compose true
-        //aidl true
+        aidl true
     }
 
     defaultConfig {

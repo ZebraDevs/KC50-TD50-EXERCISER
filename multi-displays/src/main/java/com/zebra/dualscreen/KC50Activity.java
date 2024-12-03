@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.hardware.display.DisplayManager;
@@ -19,7 +21,9 @@ import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
+import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,14 +35,29 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Random;
-
+import com.zebra.ledbarlightservice.ILedBarLightService;
 /*
 * ZEBRA WORKSTATION CONNECT EXERCISER -
 * */
-public class KC50Activity extends AppCompatActivity {
+public class KC50Activity extends AppCompatActivity  implements ServiceConnection {
 
     private final static String TAG1 = "LIFECYCLE";
     String last_activity_state ="N/A";
+
+    private ILedBarLightService   mLedService = null;
+
+    private final ServiceConnection ledConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            Log.i(TAG1, "onServiceConnected");
+            mLedService = ILedBarLightService.Stub.asInterface(iBinder);
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            Log.i(TAG1, "onServiceDisconnected");
+            mLedService = null;
+        }
+    };
     TextView tvOut;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +75,11 @@ public class KC50Activity extends AppCompatActivity {
 
         printAppendOnScreen( getDisplayInfo() );
 
-        registerReceiver(dualScreenReceiver, new IntentFilter("com.zebra.dualscreen.TD50_ACTION"));
+        registerReceiver(dualScreenReceiver, new IntentFilter("com.zebra.dualscreen.TD50_ACTION"), Context.RECEIVER_NOT_EXPORTED);
+
+        // Connect to the AIDL interface for LED control:
+        Intent ledIntent = new Intent().setComponent(new ComponentName("com.zebra.ledbarlightservice", "com.zebra.ledbarlightservice.LedBarLightService"));
+        bindService(ledIntent, ledConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -98,7 +121,7 @@ public class KC50Activity extends AppCompatActivity {
 
 
 
-    public void btClick_HDLauncher(View v) {
+    public void btClick_HDLauncher(View v) throws RemoteException {
         //Launch on 2nd display if available
         ActivityOptions ao = ActivityOptions.makeBasic();
         int other_display_id = 0;
@@ -122,6 +145,8 @@ public class KC50Activity extends AppCompatActivity {
         Intent intent= new Intent(getBaseContext(), TD50Activity.class);
         intent.setFlags(  Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent, bao);
+
+
     }
 
 
@@ -256,14 +281,18 @@ public class KC50Activity extends AppCompatActivity {
         return "ACTIVITY RUNNING ON DISPLAY ID="+activityDisplay.getDisplayId()+"\n" ;
     }
 
-    public void onClickbtn_RED(View v) {
+    public void onClickbtn_RED(View v) throws RemoteException {
         sendMessageToTD50("RED");
+        setLEDColor("RED");
+
     }
-    public void onClickbtn_GREEN(View v) {
+    public void onClickbtn_GREEN(View v) throws RemoteException {
         sendMessageToTD50("GREEN");
+        setLEDColor("GREEN");
     }
-    public void onClickbtn_BLUE(View v) {
+    public void onClickbtn_BLUE(View v) throws RemoteException {
         sendMessageToTD50("BLUE");
+        setLEDColor("BLUE");
     }
 
     void sendMessageToTD50(String msg){
@@ -282,6 +311,12 @@ public class KC50Activity extends AppCompatActivity {
                 String message = intent.getStringExtra("msg");
                 Log.i("KC50", "Received message from TD50: " + message);
                 printAppendOnScreen( "Received message from TD50: " + message );
+                try {
+                    assert message != null;
+                    setLEDColor(message);
+                } catch (RemoteException ignored) {
+
+                }
 
                 Handler mainHandler = new Handler(Looper.getMainLooper());
                 mainHandler.post(new Runnable() {
@@ -297,6 +332,32 @@ public class KC50Activity extends AppCompatActivity {
             }
         }
     };
+
+    private void setLEDColor(String message) throws RemoteException {
+        switch (message) {
+            case "RED":
+                mLedService.setLight(0, 0xFF0000);
+                break;
+            case "GREEN":
+                mLedService.setLight(0, 0x00FF00);
+                break;
+            case "BLUE":
+                mLedService.setLight(0, 0x0000FF);
+                break;
+            case "CYAN  ":
+                mLedService.setLight(0, 0x00FFFF);
+                break;
+            case "MAGENTA":
+                mLedService.setLight(0, 0xFF00FF);
+                break;
+            case "YELLOW":
+                mLedService.setLight(0, 0xFFFF00);
+                break;
+            default:
+                mLedService.setLight(0, 0xFFFFFF);
+                break;
+        }
+    }
 
 
     public void playPCMData(byte[] data) {
@@ -337,5 +398,13 @@ public class KC50Activity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
 
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
 }

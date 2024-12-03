@@ -28,10 +28,12 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,6 +49,14 @@ public class KC50Activity extends AppCompatActivity {
     private final static String TAG1 = "LIFECYCLE";
     String last_activity_state ="N/A";
     TextView tvOut;
+
+    private WindowManager windowManagerOT;
+    private View floatingKeyboardViewOT;
+    EditText editText2;
+    TextView editText3;
+
+    private int lastX, lastY;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -63,7 +73,110 @@ public class KC50Activity extends AppCompatActivity {
         printAppendOnScreen( getDisplayInfo() );
 
         registerReceiver(dualScreenReceiver, new IntentFilter("com.zebra.dualscreen.TD50_ACTION"), Context.RECEIVER_NOT_EXPORTED);
+
+        windowManagerOT = (WindowManager) getSystemService(WINDOW_SERVICE);
+        floatingKeyboardViewOT = LayoutInflater.from(this).inflate(R.layout.custom_keyboard, null);
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        );
+
+        floatingKeyboardViewOT.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        lastX = (int) event.getRawX();
+                        lastY = (int) event.getRawY();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        int x = (int) event.getRawX();
+                        int y = (int) event.getRawY();
+
+// Calculate the distance moved and update the window position
+                        params.x = params.x + (x - lastX);
+                        params.y = params.y + (y - lastY);
+
+// Update the floating window position
+                        windowManagerOT.updateViewLayout(floatingKeyboardViewOT, params);
+
+// Save the new touch position
+                        lastX = x;
+                        lastY = y;
+                        break;
+                }
+                return false;
+            }
+        });
+
+        editText2 = findViewById(R.id.editTextText2);
+        editText2.setOnTouchListener((v, event) -> {
+//            Log.i("onCreate/setOnTouchListener","#NDZL/listener: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                try {windowManagerOT.addView(floatingKeyboardViewOT, params);} catch (Exception e) {}
+                setupKeyboardButtons(editText2);
+            }
+
+            return true;
+        });
+
+
+        editText3 = findViewById(R.id.editTextText3);
+        editText3.setOnTouchListener((v, event) -> {
+//            Log.i("onCreate/setOnTouchListener","#NDZL/listener: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                try {windowManagerOT.addView(floatingKeyboardViewOT, params);} catch (Exception e) {}
+                setupKeyboardButtons(editText3);
+            }
+
+            return true;
+        });
+
     }
+
+    private void setupKeyboardButtons(View etView) {
+        Button keyA = floatingKeyboardViewOT.findViewById(R.id.keyA);
+        Button keyB = floatingKeyboardViewOT.findViewById(R.id.keyB);
+        Button keyC = floatingKeyboardViewOT.findViewById(R.id.keyC);
+        Button key0 = floatingKeyboardViewOT.findViewById(R.id.key0);
+        Button key1 = floatingKeyboardViewOT.findViewById(R.id.key1);
+        Button keyEnter = floatingKeyboardViewOT.findViewById(R.id.keyEnter);
+        Button keyDelete = floatingKeyboardViewOT.findViewById(R.id.keyDEL);
+
+//        Log.i("FloatingKeyboardService/setupKeyboardButtons","#NDZL/body: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
+
+
+        EditText _et = (EditText) etView;
+        keyA.setOnClickListener(v -> {
+//            Log.i("FloatingKeyboardService/setOnClickListener","#NDZL/listener: Thread "+ Thread.currentThread().getName()+ "(" + Thread.currentThread().getId() + ")");
+            _et.getText().append("A");
+        });
+
+        keyB.setOnClickListener(v -> {
+            _et.getText().append("B");
+        });
+
+        keyEnter.setOnClickListener(v -> {
+            //try {
+            windowManagerOT.removeView(floatingKeyboardViewOT);
+            //} catch (Exception e) {}
+        });
+
+        keyDelete.setOnClickListener(v -> {
+            //try {
+            _et.setText( _et.getText().delete(_et.getText().length()-1, _et.getText().length()) );
+            //} catch (Exception e) {}
+        });
+
+        // Add more button setups for other keys
+    }
+
 
     @Override
     protected void onStart() {
@@ -78,10 +191,10 @@ public class KC50Activity extends AppCompatActivity {
         Log.i(TAG1, "onResume");
         last_activity_state = "onResume";
 
-        EditText editText1 = findViewById(R.id.editText1);
-        editText1.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText1, InputMethodManager.SHOW_IMPLICIT);
+//        EditText editText1 = findViewById(R.id.editText1);
+//        editText1.requestFocus();
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(editText1, InputMethodManager.SHOW_IMPLICIT);
     }
 
     @Override

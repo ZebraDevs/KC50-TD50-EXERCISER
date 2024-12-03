@@ -31,15 +31,28 @@
 
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/editTextText2"
             android:layout_width="match_parent"
-            android:layout_height="167dp"
-            android:enabled="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+
             android:ems="20"
-            android:hint="Write something here"
-            android:inputType="number|numberDecimal" />
+            android:inputType="text"
+            android:hint="Just tap here to open an overlay keyboard"
+            android:text=""
+            android:textFontWeight="30" />
+
+        <TextView
+            android:id="@+id/editTextText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+
+            android:ems="20"
+            android:inputType="text"
+            android:hint="Just tap here to open an overlay keyboard"
+            android:text=""
+            android:textFontWeight="30" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,6 +90,13 @@
                 android:backgroundTint="#0A14FF"
                 android:onClick="onClickbtn_BLUE"
                 android:text="BLUE" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="TextView" />
 
         </LinearLayout>
 

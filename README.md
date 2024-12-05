@@ -8,6 +8,7 @@ Sample code showing how to use some Large Screens APIs from Android and how to s
 - The application will be split across the two screens.
 - Each screen is showing a information specific to the display is it shown on.
 - Each screen holds some colored buttons to show how messages can be sent between the two screens.
+- LED bar API examples added. Please watch the video below.
 
 ### Device set up to run this sample code
 - Ensure you have both the KC50 and TD50 devices available and connected.
@@ -19,6 +20,10 @@ Sample code showing how to use some Large Screens APIs from Android and how to s
 
 
 https://github.com/user-attachments/assets/d40362d1-13e6-402c-a567-90040876bd8d
+
+
+
+https://github.com/user-attachments/assets/862417ff-9cf7-4bf0-af01-2aa256ac7f99
 
 
 

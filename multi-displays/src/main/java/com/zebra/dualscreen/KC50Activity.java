@@ -39,7 +39,7 @@ import com.zebra.ledbarlightservice.ILedBarLightService;
 /*
 * ZEBRA WORKSTATION CONNECT EXERCISER -
 * */
-public class KC50Activity extends AppCompatActivity  implements ServiceConnection {
+public class KC50Activity extends AppCompatActivity  {
 
     private final static String TAG1 = "LIFECYCLE";
     String last_activity_state ="N/A";
@@ -397,14 +397,4 @@ public class KC50Activity extends AppCompatActivity  implements ServiceConnectio
         return samples;
     }
 
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-
-    }
 }

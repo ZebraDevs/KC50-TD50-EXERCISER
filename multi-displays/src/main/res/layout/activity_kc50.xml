@@ -71,6 +71,27 @@
         </LinearLayout>
 
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="#AAAAAA"
+            android:onClick="onClickbtn_SEQUENCE"
+            android:text="SEQUENCE" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="#888888"
+            android:onClick="onClickbtn_OFF"
+            android:text="LED OFF" />
+
+
     </LinearLayout>
 
 </ScrollView>

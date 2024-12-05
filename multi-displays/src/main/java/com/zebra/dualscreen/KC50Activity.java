@@ -134,7 +134,8 @@ public class KC50Activity extends AppCompatActivity  {
             for (Display _d : displays) {
                 if (_d.getDisplayId() >0 ) {
                     other_display_id = _d.getDisplayId();
-                    break;
+                    mLedService.setLedSequenceOff(101, 0x0);
+break;
                 }
             }
         }
@@ -294,6 +295,23 @@ public class KC50Activity extends AppCompatActivity  {
         sendMessageToTD50("BLUE");
         setLEDColor("BLUE");
     }
+    public void onClickbtn_OFF(View v) throws RemoteException {
+        sendMessageToTD50("OFF");
+        mLedService.setLedOff();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+
+        }
+        mLedService.setLedSequenceOff(101, 0x0);
+    }
+    public void onClickbtn_SEQUENCE(View v) throws RemoteException {
+        sendMessageToTD50("SEQ");
+        //RANDOM rgb color as hex
+        Random random = new Random();
+
+        mLedService.setLightSequence(101, random.nextInt(0xFFFFFF + 1), 333, random.nextInt(0xFFFFFF + 1), 334);
+    }
 
     void sendMessageToTD50(String msg){
         Intent intent = new Intent();
@@ -336,26 +354,33 @@ public class KC50Activity extends AppCompatActivity  {
     private void setLEDColor(String message) throws RemoteException {
         switch (message) {
             case "RED":
-                mLedService.setLight(0, 0xFF0000);
-                break;
+                mLedService.setLight(101, 0xFF0000);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
             case "GREEN":
-                mLedService.setLight(0, 0x00FF00);
-                break;
+                mLedService.setLight(101, 0x00FF00);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
             case "BLUE":
-                mLedService.setLight(0, 0x0000FF);
-                break;
+                mLedService.setLight(101, 0x0000FF);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
             case "CYAN  ":
-                mLedService.setLight(0, 0x00FFFF);
-                break;
+                mLedService.setLight(101, 0x00FFFF);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
             case "MAGENTA":
-                mLedService.setLight(0, 0xFF00FF);
-                break;
+                mLedService.setLight(101, 0xFF00FF);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
             case "YELLOW":
-                mLedService.setLight(0, 0xFFFF00);
-                break;
+                mLedService.setLight(101, 0xFFFF00);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
             default:
-                mLedService.setLight(0, 0xFFFFFF);
-                break;
+                mLedService.setLight(101, 0xFFFFFF);
+                mLedService.setLedSequenceOff(101, 0x0);
+break;
         }
     }
 
